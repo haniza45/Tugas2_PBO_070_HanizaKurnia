@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalkulator Luas Bangun Datar</title>
+</head>
+<body>
+    <h1>Kalkulator Luas Bangun Datar</h1>
+    <form method="post">
+        <label>Pilih Bangun Datar:</label>
+        <select name="shape">
+            <option value="rectangle">Persegi Panjang</option>
+            <option value="circle">Lingkaran</option>
+        </select>
+        <br>
+        <label for="length">Panjang:</label>
+        <input type="text" name="length" id="length">
+        <br>
+        <label for="width">Lebar:</label>
+        <input type="text" name="width" id="width">
+        <br>
+        <label for="radius">Jari-Jari:</label>
+        <input type="text" name="radius" id="radius">
+        <br>
+        <input type="submit" name="calculate" value="Hitung">
+    </form>
+
+    <?php
+    // Class Shape sebagai class induk
+    class Shape {
+        protected $area;
+
+        public function calculateArea() {
+            return $this->area;
+        }
+    }
+
+    // Class Rectangle sebagai class anak
+    class Rectangle extends Shape {
+        private $length;
+        private $width;
+
+        public function __construct($length, $width) {
+            $this->length = $length;
+            $this->width = $width;
+            $this->area = $this->length * $this->width;
+        }
+    }
+
+    // Class Circle sebagai class anak
+    class Circle extends Shape {
+        private $radius;
+
+        public function __construct($radius) {
+            $this->radius = $radius;
+            $this->area = 3.14 * $this->radius * $this->radius;
+        }
+    }
+
+    if (isset($_POST['calculate'])) {
+        $shapeType = $_POST['shape'];
+
+        if ($shapeType == "rectangle") {
+            $length = $_POST['length'];
+            $width = $_POST['width'];
+            $shape = new Rectangle($length, $width);
+        } elseif ($shapeType == "circle") {
+            $radius = $_POST['radius'];
+            $shape = new Circle($radius);
+        }
+
+        echo "Luas Bangun Datar: " . $shape->calculateArea();
+    }
+    ?>
+</body>
+</html>

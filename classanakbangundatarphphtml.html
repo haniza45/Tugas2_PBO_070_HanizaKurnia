@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kalkulator Luas Bangun Datar</title>
+</head>
+<body>
+    <h1>Kalkulator Luas Bangun Datar</h1>
+
+    <form method="post">
+        <label for="bentuk">Pilih Bentuk:</label>
+        <select id="bentuk" name="bentuk">
+            <option value="Persegi">Persegi</option>
+            <option value="PersegiPanjang">Persegi Panjang</option>
+            <option value="Lingkaran">Lingkaran</option>
+            <option value="Segitiga">Segitiga</option>
+        </select>
+
+        <br><br>
+
+        <label for="param1">Parameter 1:</label>
+        <input type="text" id="param1" name="param1" placeholder="Panjang Sisi/Radius/Alas">
+
+        <br><br>
+
+        <label for="param2">Parameter 2 (hanya untuk Persegi Panjang dan Segitiga):</label>
+        <input type="text" id="param2" name="param2" placeholder="Lebar/Tinggi">
+
+        <br><br>
+
+        <input type="submit" value="Hitung Luas">
+    </form>
+
+    <?php
+        abstract class Bentuk {
+            abstract function hitungLuas();
+        }
+
+        class Persegi extends Bentuk {
+            private $sisi;
+
+            public function __construct($sisi) {
+                $this->sisi = $sisi;
+            }
+
+            public function hitungLuas() {
+                return $this->sisi * $this->sisi;
+            }
+        }
+
+        class PersegiPanjang extends Bentuk {
+            private $panjang;
+            private $lebar;
+
+            public function __construct($panjang, $lebar) {
+                $this->panjang = $panjang;
+                $this->lebar = $lebar;
+            }
+
+            public function hitungLuas() {
+                return $this->panjang * $this->lebar;
+            }
+        }
+
+        class Lingkaran extends Bentuk {
+            private $radius;
+
+            public function __construct($radius) {
+                $this->radius = $radius;
+            }
+
+            public function hitungLuas() {
+                return M_PI * $this->radius * $this->radius;
+            }
+        }
+
+        class Segitiga extends Bentuk {
+            private $alas;
+            private $tinggi;
+
+            public function __construct($alas, $tinggi) {
+                $this->alas = $alas;
+                $this->tinggi = $tinggi;
+            }
+
+            public function hitungLuas() {
+                return 0.5 * $this->alas * $this->tinggi;
+            }
+        }
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $bentuk = $_POST['bentuk'];
+            $param1 = floatval($_POST['param1']);
+            $param2 = isset($_POST['param2']) ? floatval($_POST['param2']) : null;
+
+            switch ($bentuk) {
+                case 'Persegi':
+                    $persegi = new Persegi($param1);
+                    $luas = $persegi->hitungLuas();
+                    echo "Luas Persegi: $luas";
+                    break;
+
+                case 'PersegiPanjang':
+                    $persegiPanjang = new PersegiPanjang($param1, $param2);
+                    $luas = $persegiPanjang->hitungLuas();
+                    echo "Luas Persegi Panjang: $luas";
+                    break;
+
+                case 'Lingkaran':
+                    $lingkaran = new Lingkaran($param1);
+                    $luas = $lingkaran->hitungLuas();
+                    echo "Luas Lingkaran: $luas";
+                    break;
+
+                case 'Segitiga':
+                    $segitiga = new Segitiga($param1, $param2);
+                    $luas = $segitiga->hitungLuas();
+                    echo "Luas Segitiga: $luas";
+                    break;
+
+                default:
+                    echo "Bentuk tidak valid.";
+                    break;
+            }
+        }
+    ?>
+</body>
+</html>
